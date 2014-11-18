@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ctrmksw.com.nashobaschedule" >
+    package="com.ctrmksw.nashobaschedule" >
 
     <application
         android:allowBackup="true"
@@ -8,8 +8,13 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="ctrmksw.com.nashobaschedule.MainActivity"
-            android:label="@string/app_name" >
+            android:name="com.ctrmksw.nashobaschedule.CalendarActivity"
+            android:label="Calendar"
+            android:parentActivityName=".AgendaActivity">
+        </activity>
+        <activity
+            android:name="com.ctrmksw.nashobaschedule.AgendaActivity"
+            android:label="Schedule" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

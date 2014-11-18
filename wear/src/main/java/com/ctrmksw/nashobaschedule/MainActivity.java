@@ -1,4 +1,4 @@
-package ctrmksw.com.nashobaschedule;
+package com.ctrmksw.nashobaschedule;
 
 import android.app.Activity;
 import android.os.Bundle;

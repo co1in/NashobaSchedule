@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="textColor">#000</color>
+    <color name="appPrimary">#4caf50</color>
+    <color name="appPrimaryDark">#388E3C</color>
+    <color name="appAccentLight">#FFFF00</color>
+
+    <!--Rounded Rectangle Colors-->
+    <color name="rounded_rect_green">#81C784</color>
+    <color name="rounded_rect_green_outline">#4CAF50</color>
+    <color name="rounded_rect_blue">#4FC3F7</color>
+    <color name="rounded_rect_blue_outline">#03A9F4</color>
+    <color name="rounded_rect_yellow">#FFF176</color>
+    <color name="rounded_rect_yellow_outline">#FFEB3B</color>
+    <color name="rounded_rect_purple">#9575CD</color>
+    <color name="rounded_rect_purple_outline">#673AB7</color>
+    <color name="rounded_rect_red">#E57373</color>
+    <color name="rounded_rect_red_outline">#F44336</color>
+</resources>
