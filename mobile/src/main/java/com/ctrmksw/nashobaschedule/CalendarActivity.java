@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Explode;
+import android.transition.Fade;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +37,8 @@ public class CalendarActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
         setContentView(R.layout.activity_calendar);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -79,20 +85,26 @@ public class CalendarActivity extends Activity
         }
         else if(id == android.R.id.home)
         {
-            NavUtils.navigateUpFromSameTask(this);
+            setResult(RESULT_CANCELED);
+            finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void rowClicked(NRDay day, View v)
+    {
+        Toast.makeText(this, "Day " + day.date.get(Calendar.DATE) + " clicked", Toast.LENGTH_SHORT).show();
+    }
+
     public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
     {
-        public class ViewHolder extends RecyclerView.ViewHolder
-        {
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             // each data item is just a string in this case
             public TextView letter, dayNum, title, earlyRelease, activityPeriod;
-            public ViewHolder(View rowView)
+            public DayRowListener listener;
+            public ViewHolder(View rowView, DayRowListener listener)
             {
                 super(rowView);
                 this.letter = (TextView)rowView.findViewById(R.id.row_letter);
@@ -100,6 +112,15 @@ public class CalendarActivity extends Activity
                 this.title = (TextView)rowView.findViewById(R.id.row_title);
                 this.earlyRelease = (TextView) rowView.findViewById(R.id.row_early_release);
                 this.activityPeriod = (TextView) rowView.findViewById(R.id.row_activity_period);
+                this.listener = listener;
+
+                rowView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v)
+            {
+                listener.onClick(v);
             }
         }
 
@@ -113,15 +134,22 @@ public class CalendarActivity extends Activity
         public ViewHolder onCreateViewHolder(ViewGroup parent, int i)
         {
             View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.day_row, parent, false);
-            ViewHolder holder = new ViewHolder(row);
-            dayToHolder(holder, sched.get(i));
+
+            NRDay day = sched.get(i);
+            ViewHolder holder = new ViewHolder(row, new DayRowListener(day));
+            dayToHolder(holder, day);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i)
         {
-            dayToHolder(viewHolder, sched.get(i));
+            NRDay day = sched.get(i);
+
+            //update the day for this item's onclick listener
+            viewHolder.listener.listeningDay = day;
+
+            dayToHolder(viewHolder, day);
         }
 
         String[] dayOptions = {"Normal", "Activity Period", "Early Release", "ER / AP"};
@@ -189,6 +217,21 @@ public class CalendarActivity extends Activity
                     return "Saturday";
             }
             return "Error";
+        }
+    }
+
+    public class DayRowListener
+    {
+        public NRDay listeningDay;
+
+        public DayRowListener(NRDay day)
+        {
+            listeningDay = day;
+        }
+
+        public void onClick(View v)
+        {
+            rowClicked(listeningDay, v);
         }
     }
 }

@@ -3,5 +3,7 @@
     <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
         <item name="android:colorPrimary">@color/appPrimary</item>
         <item name="android:colorPrimaryDark">@color/appPrimaryDark</item>
+
+        <item name="android:windowContentTransitions">true</item>
     </style>
 </resources>

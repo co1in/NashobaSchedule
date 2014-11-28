@@ -10,7 +10,7 @@
         <activity
             android:name="com.ctrmksw.nashobaschedule.CalendarActivity"
             android:label="Calendar"
-            android:parentActivityName=".AgendaActivity">
+            android:parentActivityName="com.ctrmksw.nashobaschedule.AgendaActivity" >
         </activity>
         <activity
             android:name="com.ctrmksw.nashobaschedule.AgendaActivity"
@@ -20,6 +20,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.ctrmksw.nashobaschedule.ConfigureScheduleActivity"
+            android:label="@string/title_activity_configure_schedule">
         </activity>
     </application>
 

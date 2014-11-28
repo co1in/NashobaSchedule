@@ -5,6 +5,8 @@
     <color name="appPrimaryDark">#388E3C</color>
     <color name="appAccentLight">#FFFF00</color>
 
+    <color name="thin_outline">#999</color>
+
     <!--Rounded Rectangle Colors-->
     <color name="rounded_rect_green">#81C784</color>
     <color name="rounded_rect_green_outline">#4CAF50</color>

@@ -59,6 +59,7 @@ public class NRSchedule
         return null;
     }*/
 
+    private static String[] dayOptions = {"Normal", "Activity Period", "Early Release", "ER / AP"};
     public static ArrayList<NRDay> getSchedule(InputStream stream, Calendar fromDate)
     {
         loadFromFile(stream);
@@ -69,7 +70,16 @@ public class NRSchedule
             for(NRDay day : sched)
             {
                 if(day.date.compareTo(fromDate) >= 0)
+                {
+                    if(day.dayType.equals(dayOptions[0]))
+                    {
+                        Calendar cal = Calendar.getInstance();
+                        if(cal.get(Calendar.DATE) == day.date.get(Calendar.DATE) && day.date.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && day.date.get(Calendar.YEAR) == cal.get(Calendar.YEAR))
+                            if(cal.get(Calendar.HOUR_OF_DAY) > 14 || (cal.get(Calendar.HOUR_OF_DAY) == 14 && cal.get(Calendar.MINUTE) > 21))
+                                continue;
+                    }
                     temp.add(day);
+                }
             }
             sched = temp;
         }
