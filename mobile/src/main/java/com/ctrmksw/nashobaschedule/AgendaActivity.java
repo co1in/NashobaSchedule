@@ -26,7 +26,7 @@ import com.ctrmksw.nashobaschedule.database.ScheduleDbHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
 
 
 public class AgendaActivity extends FragmentActivity
@@ -75,15 +75,7 @@ public class AgendaActivity extends FragmentActivity
         if(rootPager != null)
             rootPager.setVisibility(View.INVISIBLE);
 
-        showToast("Start");
         updateMyClassList();
-    }
-
-    @Override
-    protected void onStop()
-    {
-        showToast("Stop");
-        super.onStop();
     }
 
     @Override
@@ -107,15 +99,16 @@ public class AgendaActivity extends FragmentActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
-        else if(id == R.id.action_calendar)
+        if(id == R.id.action_calendar)
         {
             Intent i = new Intent(this, CalendarActivity.class);
             startActivityForResult(i, 0);
             return true;
+        }
+        else if(id == R.id.menu_edit_schedule)
+        {
+            Intent i = new Intent(this, ConfigureScheduleActivity.class);
+            startActivity(i);
         }
 
         return super.onOptionsItemSelected(item);
@@ -154,6 +147,8 @@ public class AgendaActivity extends FragmentActivity
             agendaPagerAdapter = new AgendaPagerAdapter(getSupportFragmentManager());
             rootPager.setAdapter(agendaPagerAdapter);
             rootPager.setPageTransformer(true, new ZoomOutPageTransformer());
+
+            rootPager.setCurrentItem(mySchedule.);
         }
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -215,7 +210,35 @@ public class AgendaActivity extends FragmentActivity
         }
     }
 
-    public static int getIndexFor(NRDay day)
+    public static NRDay getNextSchoolDay()
+    {
+        Calendar now = Calendar.getInstance();
+
+        ArrayList<NRDay> temp = new ArrayList<NRDay>();
+
+        for(NRDay day : sched)
+        {
+            if(day.date.compareTo(now) >= 0)
+            {
+                //!!!Left off here!!!
+                if(now.get(Calendar.DATE) == day.date.get(Calendar.DATE) && day.date.get(Calendar.MONTH) == now.get(Calendar.MONTH) && day.date.get(Calendar.YEAR) == now.get(Calendar.YEAR)))
+                {
+                    if(day.dayType.equals(NRSchedule.dayOptions[0]))
+                    {
+                        if(now.get(Calendar.HOUR_OF_DAY) > 14 || (now.get(Calendar.HOUR_OF_DAY) == 14 && now.get(Calendar.MINUTE) > 21))
+                            continue;
+                    }
+                    else if(day.dayType.equals(NRSchedule.dayOptions[1]))
+                    {
+                        if(now.get(CAlendar.))
+                    }
+                }
+                temp.add(day);
+            }
+        }
+    }
+
+    public static int getSchedIndexFor(NRDay day)
     {
         for(int i = 0; i < sched.size(); i++)
         {

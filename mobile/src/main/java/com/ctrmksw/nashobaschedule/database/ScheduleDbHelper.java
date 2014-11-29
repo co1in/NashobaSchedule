@@ -102,11 +102,15 @@ public class ScheduleDbHelper
 
     private boolean[] fromActivatedString(String s)
     {
-        boolean[] activated = new boolean[s.length()];
+        boolean[] activated = new boolean[8];
+        for(int i = 0; i < activated.length; i++)
+            activated[i] = false;
+
         for(int i = 0; i < s.length(); i++)
         {
             activated[Integer.parseInt("" + s.charAt(i))] = true;
         }
+
         return activated;
     }
 

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="@drawable/gray_outline">
+        android:background="@drawable/gray_outline"
+        android:id="@+id/configure_top_relative">
         <TextView
             android:layout_width="@dimen/indicator_padding"
             android:layout_height="@dimen/indicator_padding"
@@ -24,6 +25,7 @@
         <View
             android:layout_width="1px"
             android:layout_height="match_parent"
+            android:layout_centerVertical="true"
             android:background="@color/thin_outline"
             android:layout_toRightOf="@id/configure_view_period"
             android:id="@+id/configure_div_1"/>
@@ -32,11 +34,89 @@
             android:layout_marginLeft="5dp"
             android:singleLine="true"
             android:layout_width="match_parent"
-            android:layout_marginRight="40dp"
+            android:layout_marginRight="50dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/configure_div_1"
             android:layout_centerVertical="true"
-            android:hint="Class Name"/>
+            android:hint="Class Name"
+            android:inputType="textCapWords"
+            android:id="@+id/configure_view_class_name_edit"/>
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_edit_days"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
+            android:id="@+id/configure_edit_days_img"
+            android:background="?android:attr/selectableItemBackground"/>
     </RelativeLayout>
-</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="55dp"
+        android:background="@drawable/gray_outline"
+        android:padding="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textSize="20sp"
+            android:text="Lunch"/>
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="1"
+            android:id="@+id/configure_main_class_lunch"/>
+        </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/configure_bottom_layout"
+        android:visibility="gone">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="55dp"
+            android:background="@drawable/gray_outline"
+            android:visibility="visible">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Alternate Class Name"
+                android:layout_centerVertical="true"
+                android:singleLine="true"
+                android:inputType="textCapWords"
+                android:id="@+id/configure_alternate_class_name_edit"
+                android:layout_marginRight="50dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="55dp"
+            android:background="@drawable/gray_outline"
+            android:padding="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textSize="20sp"
+                android:text="Alt. Class Lunch"/>
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="1"
+                android:id="@+id/configure_alternate_class_lunch"/>
+        </RelativeLayout>
+        </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="15dp"/>
+</LinearLayout>

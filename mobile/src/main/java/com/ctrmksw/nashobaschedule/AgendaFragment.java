@@ -73,8 +73,31 @@ public class AgendaFragment extends Fragment
         MySchedule mySchedule = AgendaActivity.getMySchedule();
 
         TextView firstPeriodClass = (TextView)root.findViewById(R.id.main_card_first_class_text);
+        //Converting enum types
         DatabasePeriodName firstPeriodName = DatabasePeriodName.valueOf(nrDay.classes.get(0).name());
         firstPeriodClass.setText(mySchedule.get(firstPeriodName, nrDay.day).getClassName());
+
+        TextView lastPeriodClass = (TextView)root.findViewById(R.id.main_card_last_class_text);
+        //Converting enum types
+        DatabasePeriodName lastPeriodName = DatabasePeriodName.valueOf(nrDay.classes.get(nrDay.classes.size()-1).name());
+        lastPeriodClass.setText(mySchedule.get(lastPeriodName, nrDay.day).getClassName());
+
+        String[] lunchNames = {"first", "second", "third", "fourth"};
+        TextView lunchTv = (TextView)root.findViewById(R.id.main_card_lunch_message_text);
+        if(nrDay.dayType.equals(dayOptions[0]))
+        {
+            String todaysLunch = "You have " + lunchNames[mySchedule.get(nrDay.classes.get(4), nrDay.day).getLunchPeriod()-1] + " today";
+            lunchTv.setText(todaysLunch);
+        }
+        else if(nrDay.dayType.equals(dayOptions[1]))
+        {
+            String todaysLunch = "You have " + lunchNames[mySchedule.get(nrDay.classes.get(5), nrDay.day).getLunchPeriod()-1] + " today";
+            lunchTv.setText(todaysLunch);
+        }
+        else
+        {
+            lunchTv.setVisibility(View.GONE);
+        }
 
         return root;
     }

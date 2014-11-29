@@ -1,5 +1,7 @@
 package com.ctrmksw.nashobaschedule.database;
 
+import com.ctrmksw.nashobaschedule.ScheduleUtils.ClassType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,5 +18,46 @@ public class MySchedule extends ArrayList<DatabaseNRClass>
                 return get(i);
         }
         return null;
+    }
+
+    public DatabaseNRClass get(ClassType period, int day)
+    {
+        for(int i = 0; i < size(); i++)
+        {
+            if(get(i).getPeriodName() == DatabasePeriodName.valueOf(period.name()) && get(i).getIsActivated(day))
+                return get(i);
+        }
+        return null;
+    }
+
+    public DatabaseNRClass getMainClass(DatabasePeriodName period)
+    {
+        for(int i = 0; i < size(); i++)
+        {
+            if(get(i).getPeriodName() == period)
+                return get(i);
+        }
+
+        return null;
+    }
+
+    public DatabaseNRClass getAltClass(DatabasePeriodName period)
+    {
+        boolean goodToGo = false;
+        DatabaseNRClass temp = null;
+        for(int i = size()-1; i >=0; i--)
+        {
+            if(get(i).getPeriodName() == period)
+            {
+                if(temp == null)
+                    temp = get(i);
+                else
+                    goodToGo = true;
+            }
+        }
+        if(goodToGo)
+            return temp;
+        else
+            return null;
     }
 }

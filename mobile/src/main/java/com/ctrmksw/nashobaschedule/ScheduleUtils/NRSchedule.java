@@ -59,7 +59,7 @@ public class NRSchedule
         return null;
     }*/
 
-    private static String[] dayOptions = {"Normal", "Activity Period", "Early Release", "ER / AP"};
+    public static String[] dayOptions = {"Normal", "Activity Period", "Early Release", "ER / AP"};
     public static ArrayList<NRDay> getSchedule(InputStream stream, Calendar fromDate)
     {
         loadFromFile(stream);
