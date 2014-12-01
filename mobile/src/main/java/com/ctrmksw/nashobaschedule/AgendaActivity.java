@@ -73,7 +73,9 @@ public class AgendaActivity extends FragmentActivity
         super.onStart();
 
         if(rootPager != null)
+        {
             rootPager.setVisibility(View.INVISIBLE);
+        }
 
         updateMyClassList();
     }
@@ -92,7 +94,7 @@ public class AgendaActivity extends FragmentActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(requestCode == CALENDAR_PICK_REQUEST && resultCode == RESULT_OK)
-        {
+         {
             NRDay clickedDay = NRDay.fromString(data.getExtras().getString(CalendarActivity.EXTRA_NRDAY));
             rootPager.setCurrentItem(getSchedIndexFor(clickedDay));
         }
@@ -167,7 +169,7 @@ public class AgendaActivity extends FragmentActivity
         int height = size.y;
         TranslateAnimation animation = new TranslateAnimation(0, 0, height, 0);
         animation.setDuration(600);
-        animation.setInterpolator(new DecelerateInterpolator(1.5f));
+        animation.setInterpolator(new DecelerateInterpolator(2f));
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

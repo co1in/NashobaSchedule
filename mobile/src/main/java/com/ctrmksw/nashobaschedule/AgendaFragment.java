@@ -20,6 +20,7 @@ import com.ctrmksw.nashobaschedule.ScheduleUtils.ClassTimeManager;
 import com.ctrmksw.nashobaschedule.ScheduleUtils.ClassType;
 import com.ctrmksw.nashobaschedule.ScheduleUtils.NRDay;
 import com.ctrmksw.nashobaschedule.ScheduleUtils.NRSchedule;
+import com.ctrmksw.nashobaschedule.database.DatabaseNRClass;
 import com.ctrmksw.nashobaschedule.database.DatabasePeriodName;
 import com.ctrmksw.nashobaschedule.database.MySchedule;
 
@@ -52,6 +53,7 @@ public class AgendaFragment extends Fragment
 
         populateMainCard(root);
         populateScheduleCard(root);
+        checkSpecialLunch(inflater, root);
 
 
         return scrollRoot;
@@ -99,35 +101,36 @@ public class AgendaFragment extends Fragment
         else
             dayTypeText.setText(nrDay.dayType);
 
-        TextView firstPeriodClass = (TextView)root.findViewById(R.id.main_card_first_class_text);
-        //Converting enum types
-        DatabasePeriodName firstPeriodName = DatabasePeriodName.valueOf(nrDay.classes.get(0).name());
-        firstPeriodClass.setText(mySchedule.get(firstPeriodName, nrDay.day).getClassName());
-
-        TextView lastPeriodClass = (TextView)root.findViewById(R.id.main_card_last_class_text);
-        //Converting enum types
-        DatabasePeriodName lastPeriodName = DatabasePeriodName.valueOf(nrDay.classes.get(nrDay.classes.size()-1).name());
-        lastPeriodClass.setText(mySchedule.get(lastPeriodName, nrDay.day).getClassName());
-
+        TextView longBlockClass = (TextView)root.findViewById(R.id.main_card_longblock_class_text);
         String[] lunchNames = {"first", "second", "third", "fourth"};
         TextView lunchTv = (TextView)root.findViewById(R.id.main_card_lunch_message_text);
         if(nrDay.dayType.equals(dayOptions[0]))
         {
-            String todaysLunch = "\u2022 You have " + lunchNames[mySchedule.get(nrDay.classes.get(4), nrDay.day).getLunchPeriod()-1] + " lunch";
+            DatabaseNRClass lunchNRClass = mySchedule.get(nrDay.classes.get(4), nrDay.day);
+            String todaysLunch = "\u2022 You have " + lunchNames[lunchNRClass.getLunchPeriod()-1] + " lunch";
             if(nrDay.compareTo(Calendar.getInstance()) == 0)
                 todaysLunch += " today";
             lunchTv.setText(todaysLunch);
+
+            longBlockClass.setText(lunchNRClass.getClassName());
         }
         else if(nrDay.dayType.equals(dayOptions[1]))
         {
-            String todaysLunch = "\u2022 You have " + lunchNames[mySchedule.get(nrDay.classes.get(5), nrDay.day).getLunchPeriod()-1] + " lunch";
+            DatabaseNRClass lunchNRClass = mySchedule.get(nrDay.classes.get(5), nrDay.day);
+            String todaysLunch = "\u2022 You have " + lunchNames[lunchNRClass.getLunchPeriod()-1] + " lunch";
             if(nrDay.compareTo(Calendar.getInstance()) == 0)
                 todaysLunch += " today";
             lunchTv.setText(todaysLunch);
+
+            longBlockClass.setText(lunchNRClass.getClassName());
         }
         else
         {
             lunchTv.setVisibility(View.GONE);
+            longBlockClass.setVisibility(View.GONE);
+
+            TextView literalLongBlockText = (TextView)root.findViewById(R.id.main_card_long_block_literal_text);
+            literalLongBlockText.setText("\u2022 There is no lunch today");
         }
     }
 
@@ -161,6 +164,15 @@ public class AgendaFragment extends Fragment
             LinearLayout.LayoutParams classParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
             classParams.bottomMargin = px;
             classView.setLayoutParams(classParams);
+        }
+    }
+
+    private void checkSpecialLunch(LayoutInflater inflater, LinearLayout root)
+    {
+        if(nrDay.dayType.equals(NRSchedule.dayOptions[1]))
+        {
+            View v = inflater.inflate(R.layout.special_lunch_card, root, false);
+            root.addView(v, 1);
         }
     }
 
