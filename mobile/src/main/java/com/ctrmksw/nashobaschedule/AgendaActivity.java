@@ -86,10 +86,16 @@ public class AgendaActivity extends FragmentActivity
         return true;
     }
 
+    private final int CALENDAR_PICK_REQUEST = 1;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        //process day request here
+        if(requestCode == CALENDAR_PICK_REQUEST && resultCode == RESULT_OK)
+        {
+            NRDay clickedDay = NRDay.fromString(data.getExtras().getString(CalendarActivity.EXTRA_NRDAY));
+            rootPager.setCurrentItem(getSchedIndexFor(clickedDay));
+        }
     }
 
     @Override
@@ -102,13 +108,17 @@ public class AgendaActivity extends FragmentActivity
         if(id == R.id.action_calendar)
         {
             Intent i = new Intent(this, CalendarActivity.class);
-            startActivityForResult(i, 0);
+            startActivityForResult(i, CALENDAR_PICK_REQUEST);
             return true;
         }
         else if(id == R.id.menu_edit_schedule)
         {
             Intent i = new Intent(this, ConfigureScheduleActivity.class);
             startActivity(i);
+        }
+        else if(id == R.id.menu_goto_today)
+        {
+            rootPager.setCurrentItem(getSchedIndexFor(getNextSchoolDay()));
         }
 
         return super.onOptionsItemSelected(item);
@@ -148,7 +158,7 @@ public class AgendaActivity extends FragmentActivity
             rootPager.setAdapter(agendaPagerAdapter);
             rootPager.setPageTransformer(true, new ZoomOutPageTransformer());
 
-            rootPager.setCurrentItem(mySchedule.);
+            rootPager.setCurrentItem(getSchedIndexFor(getNextSchoolDay()));
         }
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -214,28 +224,28 @@ public class AgendaActivity extends FragmentActivity
     {
         Calendar now = Calendar.getInstance();
 
-        ArrayList<NRDay> temp = new ArrayList<NRDay>();
-
         for(NRDay day : sched)
         {
-            if(day.date.compareTo(now) >= 0)
+            if(day.compareTo(now) >= 0)
             {
-                //!!!Left off here!!!
-                if(now.get(Calendar.DATE) == day.date.get(Calendar.DATE) && day.date.get(Calendar.MONTH) == now.get(Calendar.MONTH) && day.date.get(Calendar.YEAR) == now.get(Calendar.YEAR)))
+                if(day.compareTo(now) == 0)
                 {
-                    if(day.dayType.equals(NRSchedule.dayOptions[0]))
+                    if(day.dayType.equals(NRSchedule.dayOptions[0]) || day.dayType.equals(NRSchedule.dayOptions[1]))
                     {
                         if(now.get(Calendar.HOUR_OF_DAY) > 14 || (now.get(Calendar.HOUR_OF_DAY) == 14 && now.get(Calendar.MINUTE) > 21))
                             continue;
                     }
-                    else if(day.dayType.equals(NRSchedule.dayOptions[1]))
+                    else if(day.dayType.equals(NRSchedule.dayOptions[2]) || day.dayType.equals(NRSchedule.dayOptions[3]))
                     {
-                        if(now.get(CAlendar.))
+                        if(now.get(Calendar.HOUR_OF_DAY) > 11 || (now.get(Calendar.HOUR_OF_DAY) == 11 && now.get(Calendar.MINUTE) > 31))
+                            continue;
                     }
                 }
-                temp.add(day);
+
+                return day;
             }
         }
+        return null;
     }
 
     public static int getSchedIndexFor(NRDay day)

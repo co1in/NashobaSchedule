@@ -22,6 +22,10 @@ public class MySchedule extends ArrayList<DatabaseNRClass>
 
     public DatabaseNRClass get(ClassType period, int day)
     {
+        if(period == ClassType.AP)
+        {
+            return new DatabaseNRClass(null, "Activity Period", -1, new boolean[]{true, true, true, true, true, true, true, true});
+        }
         for(int i = 0; i < size(); i++)
         {
             if(get(i).getPeriodName() == DatabasePeriodName.valueOf(period.name()) && get(i).getIsActivated(day))

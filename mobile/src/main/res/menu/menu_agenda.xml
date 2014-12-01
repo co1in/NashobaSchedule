@@ -5,4 +5,6 @@
         android:showAsAction="ifRoom" android:icon="@drawable/ic_action_calendar"/>
     <item android:id="@+id/menu_edit_schedule" android:title="Edit Schedule"
         android:showAsAction="never"/>
+    <item android:id="@+id/menu_goto_today" android:title="Go to Current Day"
+        android:showAsAction="never"/>
 </menu>

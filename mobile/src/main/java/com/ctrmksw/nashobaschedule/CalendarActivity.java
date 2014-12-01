@@ -1,6 +1,7 @@
 package com.ctrmksw.nashobaschedule;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
@@ -88,10 +89,14 @@ public class CalendarActivity extends Activity
 
         return super.onOptionsItemSelected(item);
     }
-
+    public static final String EXTRA_NRDAY = "NrDay";
     public void rowClicked(NRDay day, View v)
     {
-        Toast.makeText(this, "Day " + day.date.get(Calendar.DATE) + " clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_NRDAY, day.toString());
+
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>

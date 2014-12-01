@@ -43,33 +43,35 @@ public class ConfigureScheduleActivity extends Activity
             @Override
             public void run(MySchedule map)
             {
-                configureClassFields = new ArrayList<ConfigureClassField>();
-
-                for (DatabasePeriodName period : DatabasePeriodName.values())
-                {
-                    ConfigureClassField configureField;
-
-                    DatabaseNRClass mainClass = map.getMainClass(period);
-                    if(mainClass != null)
-                    {
-                        DatabaseNRClass altClass = map.getAltClass(period);
-                        configureField = ConfigureClassField.load(ConfigureScheduleActivity.this, mainClass, altClass);
-                    }
-                    else
-                    {
-                        configureField = new ConfigureClassField(ConfigureScheduleActivity.this, period);
-                    }
-
-                    configureClassFields.add(configureField);
-                }
-
-                runOnUiThread(new ObjectRunnable(configureClassFields)
+                runOnUiThread(new ObjectRunnable(map)
                 {
                     @Override
                     public void run()
                     {
-                        ArrayList<ConfigureClassField> classFields = (ArrayList<ConfigureClassField>) obj[0];
-                        for(ConfigureClassField classField : classFields)
+                        MySchedule map = (MySchedule)obj[0];
+
+                        configureClassFields = new ArrayList<ConfigureClassField>();
+
+                        for (DatabasePeriodName period : DatabasePeriodName.values())
+                        {
+                            ConfigureClassField configureField;
+
+                            DatabaseNRClass mainClass = map.getMainClass(period);
+                            if(mainClass != null)
+                            {
+                                DatabaseNRClass altClass = map.getAltClass(period);
+                                configureField = ConfigureClassField.load(ConfigureScheduleActivity.this, mainClass, altClass);
+                            }
+                            else
+                            {
+                                configureField = new ConfigureClassField(ConfigureScheduleActivity.this, period);
+                            }
+
+                            configureClassFields.add(configureField);
+                        }
+
+
+                        for(ConfigureClassField classField : configureClassFields)
                         {
                             root.addView(classField.getRootLayout());
 
