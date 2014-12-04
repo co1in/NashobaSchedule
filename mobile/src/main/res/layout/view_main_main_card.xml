@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginLeft="@dimen/activity_horizontal_margin"
+android:layout_marginRight="@dimen/activity_horizontal_margin"
+android:layout_marginTop="5dp"
+android:layout_marginBottom="10dp"
+    android:id="@+id/main_main_root">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="5dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Saturday, September 31"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:textColor="#000"
+        android:fontFamily="sans-serif"
+        android:paddingBottom="7dp"
+        android:id="@+id/main_card_title"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Normal Day"
+            android:fontFamily="sans-serif-light"
+            android:layout_centerVertical="true"
+            android:id="@+id/main_card_day_type_text"
+            android:textSize="20sp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/main_card_indicator_linear_layout"
+            android:layout_alignParentEnd="true">
+            <TextView
+                android:layout_width="@dimen/indicator_padding"
+                android:layout_height="@dimen/indicator_padding"
+                android:id="@+id/main_card_row_letter"
+                android:layout_gravity="center_vertical"
+                android:background="@color/rounded_rect_green"
+                android:text="A"
+                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginEnd="5dp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:elevation="@dimen/indicator_elevation"/>
+            <TextView
+                android:layout_width="@dimen/indicator_padding"
+                android:layout_height="@dimen/indicator_padding"
+                android:layout_marginEnd="5dp"
+                android:id="@+id/main_card_row_number"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:background="@color/rounded_rect_blue"
+                android:text="1"
+                android:elevation="@dimen/indicator_elevation"
+                android:layout_gravity="center_vertical"/>
+            <TextView
+                android:layout_width="@dimen/indicator_padding"
+                android:layout_height="@dimen/indicator_padding"
+                android:layout_marginEnd="5dp"
+                android:id="@+id/main_card_row_early_release"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:elevation="@dimen/indicator_elevation"
+                android:background="@color/rounded_rect_red"
+                android:text="ER"
+                android:layout_gravity="center_vertical"/>
+            <TextView
+                android:layout_width="@dimen/indicator_padding"
+                android:layout_height="@dimen/indicator_padding"
+                android:layout_marginEnd="5dp"
+                android:id="@+id/main_card_row_activity_period"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:background="@color/rounded_rect_purple"
+                android:text="AP"
+                android:elevation="@dimen/indicator_elevation"
+                android:layout_gravity="center_vertical"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="\u2022 Long Block: "
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-light"
+            android:id="@+id/main_card_long_block_literal_text"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-light"
+            android:text="Physics"
+            android:id="@+id/main_card_longblock_class_text"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/main_card_lunch_message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\u2022 You have first lunch today"
+        android:textColor="#000"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="3dp"/>
+</LinearLayout>
+
+</android.support.v7.widget.CardView>

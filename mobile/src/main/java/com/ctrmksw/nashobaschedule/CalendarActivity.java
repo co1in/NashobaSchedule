@@ -3,12 +3,8 @@ package com.ctrmksw.nashobaschedule;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.Explode;
-import android.transition.Fade;
-import android.transition.Slide;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,6 +57,39 @@ public class CalendarActivity extends Activity
             finish();
         }
         recyclerView.setAdapter(adapter);
+
+        if(!SchedPrefs.getHasViewedCalendarHint(this))
+        {
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            View tipRoot = findViewById(R.id.calendar_tip_root);
+                            tipRoot.setVisibility(View.VISIBLE);
+                            findViewById(R.id.calendar_tip_btn).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v)
+                                {
+                                    findViewById(R.id.calendar_tip_root).setVisibility(View.GONE);
+                                    SchedPrefs.didViewCalendarHint(CalendarActivity.this);
+                                }
+                            });
+                        }
+                    });
+                }
+            }).start();
+        }
     }
 
 
@@ -134,7 +163,7 @@ public class CalendarActivity extends Activity
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int i)
         {
-            View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.day_row, parent, false);
+            View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_calendar_day_row, parent, false);
 
             NRDay day = sched.get(i);
             ViewHolder holder = new ViewHolder(row, new DayRowListener(day));
@@ -153,7 +182,6 @@ public class CalendarActivity extends Activity
             dayToHolder(viewHolder, day);
         }
 
-        String[] dayOptions = {"Normal", "Activity Period", "Early Release", "ER / AP"};
         private void dayToHolder(ViewHolder holder, NRDay day)
         {
             //Title
@@ -169,20 +197,20 @@ public class CalendarActivity extends Activity
             //Indicators
             holder.letter.setText(day.classes.get(0).name());
             holder.dayNum.setText(String.valueOf(day.day));
-            if(day.dayType.equals(dayOptions[0]))
+            if(day.dayType.equals(NRSchedule.dayOptions[0]))
             {
                 holder.activityPeriod.setVisibility(View.GONE);
                 holder.earlyRelease.setVisibility(View.GONE);
             }
-            else if(day.dayType.equals(dayOptions[1]))
+            else if(day.dayType.equals(NRSchedule.dayOptions[1]))
             {
                 holder.activityPeriod.setVisibility(View.VISIBLE);
                 holder.earlyRelease.setVisibility(View.GONE);
             }
-            else if(day.dayType.equals(dayOptions[2]))
+            else if(day.dayType.equals(NRSchedule.dayOptions[2]))
             {
                 holder.activityPeriod.setVisibility(View.GONE);
-                holder.activityPeriod.setVisibility(View.VISIBLE);
+                holder.earlyRelease.setVisibility(View.VISIBLE);
             }
             else
             {

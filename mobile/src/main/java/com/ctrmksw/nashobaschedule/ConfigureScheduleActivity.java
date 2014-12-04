@@ -31,7 +31,7 @@ public class ConfigureScheduleActivity extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(SchedPrefs.getIsSetup(this));
+        getActionBar().setDisplayHomeAsUpEnabled(SchedPrefs.getHasSavedSchedule(this));
 
         setContentView(R.layout.activity_configure_schedule);
 
@@ -98,7 +98,7 @@ public class ConfigureScheduleActivity extends Activity
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         MenuItem cancel = menu.findItem(R.id.menu_configure_cancel);
-        cancel.setVisible(SchedPrefs.getIsSetup(this));
+        cancel.setVisible(SchedPrefs.getHasSavedSchedule(this));
 
         return true;
     }
@@ -157,13 +157,13 @@ public class ConfigureScheduleActivity extends Activity
             @Override
             public void run()
             {
-                if(!SchedPrefs.getIsSetup(ConfigureScheduleActivity.this))
+                if(!SchedPrefs.getHasSavedSchedule(ConfigureScheduleActivity.this))
                 {
                     Intent i = new Intent(ConfigureScheduleActivity.this, AgendaActivity.class);
                     startActivity(i);
                 }
 
-                SchedPrefs.didSetup(ConfigureScheduleActivity.this);
+                SchedPrefs.didSetupSchedule(ConfigureScheduleActivity.this);
 
                 finish();
             }

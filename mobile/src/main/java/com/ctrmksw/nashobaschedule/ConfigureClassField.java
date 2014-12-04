@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ctrmksw.nashobaschedule.database.DatabaseNRClass;
@@ -22,7 +20,7 @@ public class ConfigureClassField
 {
     private ViewGroup root;
     private EditText mainClassField, altClassField;
-    private TextView letter;
+    private TextView headerText;
     private View editDaysButton;
     private ViewGroup bottomLayout;
     private boolean[] activatedDays = {true, true, true, true, true, true, true, true};
@@ -37,13 +35,13 @@ public class ConfigureClassField
         this.periodName = period;
 
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        root = (ViewGroup)inflater.inflate(R.layout.configure_class_view, null);
+        root = (ViewGroup)inflater.inflate(R.layout.view_configure_class, null);
 
-        mainClassField = (EditText) root.findViewById(R.id.configure_view_class_name_edit);
+        mainClassField = (EditText) root.findViewById(R.id.configure_main_class_name_edit);
         altClassField = (EditText)root.findViewById(R.id.configure_alternate_class_name_edit);
 
-        letter = (TextView)root.findViewById(R.id.configure_view_period);
-        letter.setText(period.name());
+        headerText = (TextView)root.findViewById(R.id.configure_view_period);
+        headerText.setText(period.name() + " Period");
 
         editDaysButton = root.findViewById(R.id.configure_edit_days_img);
         editDaysButton.setOnClickListener(new View.OnClickListener() {

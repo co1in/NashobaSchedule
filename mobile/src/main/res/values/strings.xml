@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_agenda">AgendaActivity</string>
     <string name="title_activity_configure_schedule">Edit Schedule</string>
+    <string name="title_activity_view_pdf_activivity">PDF Schedule</string>
 
 </resources>

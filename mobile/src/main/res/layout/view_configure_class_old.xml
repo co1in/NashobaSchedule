@@ -40,7 +40,7 @@
             android:layout_centerVertical="true"
             android:hint="Class Name"
             android:inputType="textCapWords"
-            android:id="@+id/configure_view_class_name_edit"/>
+            android:id="@+id/configure_main_class_name_edit"/>
 
         <ImageView
             android:layout_width="40dp"

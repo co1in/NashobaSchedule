@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
@@ -45,7 +46,7 @@ public class AgendaActivity extends FragmentActivity
     {
         super.onCreate(savedInstanceState);
 
-        if(!SchedPrefs.getIsSetup(this))
+        if(!SchedPrefs.getHasSavedSchedule(this))
         {
             Intent i = new Intent(this, ConfigureScheduleActivity.class);
             startActivity(i);
@@ -74,7 +75,7 @@ public class AgendaActivity extends FragmentActivity
 
         if(rootPager != null)
         {
-            rootPager.setVisibility(View.INVISIBLE);
+            rootPager.setVisibility(View.GONE);
         }
 
         updateMyClassList();
@@ -135,7 +136,6 @@ public class AgendaActivity extends FragmentActivity
             {
                 AgendaActivity.mySchedule = map;
 
-
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -163,6 +163,10 @@ public class AgendaActivity extends FragmentActivity
             rootPager.setCurrentItem(getSchedIndexFor(getNextSchoolDay()));
         }
 
+        int index = rootPager.getCurrentItem();
+        rootPager.setAdapter(agendaPagerAdapter);
+        rootPager.setCurrentItem(index);
+
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -177,7 +181,24 @@ public class AgendaActivity extends FragmentActivity
             }
 
             @Override
-            public void onAnimationEnd(Animation animation) {
+            public void onAnimationEnd(Animation animation)
+            {
+                if(!SchedPrefs.getHasViewedSlideyHint(AgendaActivity.this))
+                {
+                    View tip = findViewById(R.id.slidey_tip_root);
+                    tip.setVisibility(View.VISIBLE);
+                    findViewById(R.id.slidey_hint_btn).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            findViewById(R.id.slidey_tip_root).setVisibility(View.GONE);
+                            SchedPrefs.didViewSlidey(AgendaActivity.this);
+                        }
+                    });
+
+                    Animation anim = new AlphaAnimation(0.0f, 1.0f);
+                    anim.setDuration(350);
+                    tip.startAnimation(anim);
+                }
             }
 
             @Override
