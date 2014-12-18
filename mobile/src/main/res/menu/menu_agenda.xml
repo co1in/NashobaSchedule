@@ -2,9 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.ctrmksw.nashobaschedule.AgendaActivity">
     <item android:id="@+id/action_calendar" android:title="View Calendar"
-        android:showAsAction="ifRoom" android:icon="@drawable/ic_action_calendar"/>
-    <item android:id="@+id/menu_edit_schedule" android:title="Edit Schedule"
-        android:showAsAction="never"/>
-    <item android:id="@+id/menu_goto_today" android:title="Go to Current Day"
-        android:showAsAction="never"/>
+        android:showAsAction="ifRoom" android:icon="@drawable/ic_calendar"/>
+    <item android:id="@+id/action_settings" android:title="Settings" android:icon="@drawable/ic_settings"
+        android:showAsAction="ifRoom"/>
 </menu>

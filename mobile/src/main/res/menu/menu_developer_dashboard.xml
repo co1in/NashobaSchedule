@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ctrmksw.nashobaschedule.DeveloperDashboardActivity">
+    <item android:id="@+id/action_send_dev" android:title="Send"
+        android:orderInCategory="100" android:showAsAction="ifRoom" />
+</menu>

@@ -16,6 +16,7 @@
         android:layout_height="60dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="5dp"
         android:id="@+id/view_pdf_card">
         <RelativeLayout
             android:layout_width="match_parent"

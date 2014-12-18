@@ -1,4 +1,4 @@
-package com.ctrmksw.nashobaschedule.ScheduleUtils;
+package com.ctrmksw.nashobaschedule.ScheduleUtils.time;
 
 /**
  * Created by Colin on 11/30/2014.
@@ -55,6 +55,11 @@ public class Time
             tempHours = hours;
         }
         return tempHours + ":" + String.format("%02d", minutes) + ((includeAmPm) ? (" " + ((am)?"AM":"PM")) : "");
+    }
+
+    public String get24HrString()
+    {
+        return hours + ":" + String.format("%02d", minutes);
     }
 
     public int getMinutesUntil(Time otherTime)

@@ -6,7 +6,8 @@
         android:id="@+id/calendar_recycler_view"
         android:scrollbars="none"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -22,15 +23,6 @@
             android:textSize="20sp"
             android:layout_centerInParent="true"
             android:textColor="#fff"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Got it"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="5dp"
-            android:layout_marginBottom="5dp"
-            android:id="@+id/calendar_tip_btn"/>
     </RelativeLayout>
 
 </FrameLayout>

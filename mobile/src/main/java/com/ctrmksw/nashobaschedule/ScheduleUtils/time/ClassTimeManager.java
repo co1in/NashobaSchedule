@@ -1,4 +1,6 @@
-package com.ctrmksw.nashobaschedule.ScheduleUtils;
+package com.ctrmksw.nashobaschedule.ScheduleUtils.time;
+
+import com.ctrmksw.nashobaschedule.ScheduleUtils.nr.NRSchedule;
 
 /**
  * Created by Colin on 11/30/2014.
@@ -30,6 +32,17 @@ public class ClassTimeManager
             new ClassTime(new Time(9, 14), new Time(9, 57)),
             new ClassTime(new Time(10, 2), new Time(10, 45)),
             new ClassTime(new Time(10, 49), new Time(11, 30))};
+
+    public static final ClassTime[] twoHourDelay =
+            {
+            new ClassTime(new Time(9, 40), new Time(10, 06)),
+            new ClassTime(new Time(10, 10), new Time(10, 36)),
+            new ClassTime(new Time(10, 40), new Time(11, 6)),
+            new ClassTime(new Time(11, 10), new Time(12, 48)),
+            new ClassTime(new Time(12, 52), new Time(13, 18)),
+            new ClassTime(new Time(13, 22), new Time(13, 48)),
+            new ClassTime(new Time(13, 52), new Time(14, 20))
+            };
 
     public static ClassTime getClassTime(int period, String dayType)
     {

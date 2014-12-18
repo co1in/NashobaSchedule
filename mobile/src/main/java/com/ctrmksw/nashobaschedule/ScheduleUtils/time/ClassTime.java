@@ -1,4 +1,4 @@
-package com.ctrmksw.nashobaschedule.ScheduleUtils;
+package com.ctrmksw.nashobaschedule.ScheduleUtils.time;
 
 import java.util.Calendar;
 

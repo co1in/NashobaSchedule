@@ -5,20 +5,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.ctrmksw.nashobaschedule.ScheduleUtils.NRDay;
-import com.ctrmksw.nashobaschedule.ScheduleUtils.NRSchedule;
+import com.ctrmksw.nashobaschedule.ScheduleUtils.ClassType;
+import com.ctrmksw.nashobaschedule.ScheduleUtils.SchoolDay;
+import com.ctrmksw.nashobaschedule.ScheduleUtils.SchoolDayManager;
+import com.ctrmksw.nashobaschedule.ScheduleUtils.nr.NRDay;
+import com.ctrmksw.nashobaschedule.ScheduleUtils.nr.NRSchedule;
+import com.ctrmksw.nashobaschedule.ScheduleUtils.special.DayType;
+import com.ctrmksw.nashobaschedule.ScheduleUtils.special.SpecialDay;
+import com.ctrmksw.nashobaschedule.database.DatabaseNRClass;
+import com.ctrmksw.nashobaschedule.database.DatabasePeriodName;
+import com.ctrmksw.nashobaschedule.database.MySchedule;
+import com.ctrmksw.nashobaschedule.database.ScheduleDbHelper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -26,9 +34,15 @@ import java.util.Calendar;
 public class CalendarActivity extends Activity
 {
 
+    private MySchedule mySchedule;
+
+    private ScheduleDbHelper database;
+
     private RecyclerView recyclerView;
     private LinearLayoutManager manager;
     private ScheduleAdapter adapter;
+
+    public static final String EXTRA_CLICKED_INDEX = "ClickedIndex";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,52 +60,95 @@ public class CalendarActivity extends Activity
         manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
 
-        try
-        {
-            adapter = new ScheduleAdapter(NRSchedule.getSchedule(getAssets().open("sched.txt"), Calendar.getInstance()));
-        }
-        catch (IOException e)
-        {
-            Log.e("IO Exception", e.getCause().getMessage());
-            Toast.makeText(this, "Internal Error 1", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        adapter = new ScheduleAdapter(SchoolDayManager.getCurrentList());
         recyclerView.setAdapter(adapter);
 
-        if(!SchedPrefs.getHasViewedCalendarHint(this))
+        database = new ScheduleDbHelper(this);
+    }
+
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+
+        database.getClassInfo(new ScheduleDbHelper.QueryRunnable()
         {
-            new Thread(new Runnable()
+            @Override
+            public void run(MySchedule map)
             {
-                @Override
-                public void run()
+
+                CalendarActivity.this.mySchedule = map;
+
+                runOnUiThread(new Runnable()
                 {
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    @Override
+                    public void run()
+                    {
+                        adapter = new ScheduleAdapter(SchoolDayManager.getCurrentList());
+                        recyclerView.setAdapter(adapter);
+
+                        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
+                        anim.setDuration(300);
+                        anim.setAnimationListener(new Animation.AnimationListener()
+                        {
+                            @Override
+                            public void onAnimationStart(Animation animation)
+                            {
+                                recyclerView.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation)
+                            {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation)
+                            {
+
+                            }
+                        });
+                        recyclerView.startAnimation(anim);
                     }
-                    runOnUiThread(new Runnable()
+                });
+
+                if(!SchedPrefs.getHasViewedCalendarHint(CalendarActivity.this))
+                {
+                    new Thread(new Runnable()
                     {
                         @Override
                         public void run()
                         {
-                            View tipRoot = findViewById(R.id.calendar_tip_root);
-                            tipRoot.setVisibility(View.VISIBLE);
-                            findViewById(R.id.calendar_tip_btn).setOnClickListener(new View.OnClickListener() {
+                            try {
+                                Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            runOnUiThread(new Runnable()
+                            {
                                 @Override
-                                public void onClick(View v)
+                                public void run()
                                 {
-                                    findViewById(R.id.calendar_tip_root).setVisibility(View.GONE);
-                                    SchedPrefs.didViewCalendarHint(CalendarActivity.this);
+                                    View tipRoot = findViewById(R.id.calendar_tip_root);
+                                    tipRoot.setVisibility(View.VISIBLE);
+                                    findViewById(R.id.calendar_tip_root).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            findViewById(R.id.calendar_tip_root).setVisibility(View.GONE);
+                                            SchedPrefs.didViewCalendarHint(CalendarActivity.this);
+                                        }
+                                    });
                                 }
                             });
                         }
-                    });
+                    }).start();
                 }
-            }).start();
-        }
+            }
+        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -118,11 +175,11 @@ public class CalendarActivity extends Activity
 
         return super.onOptionsItemSelected(item);
     }
-    public static final String EXTRA_NRDAY = "NrDay";
-    public void rowClicked(NRDay day, View v)
+
+    public void rowClicked(int index)
     {
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_NRDAY, day.toString());
+        intent.putExtra(EXTRA_CLICKED_INDEX, index);
 
         setResult(RESULT_OK, intent);
         finish();
@@ -133,6 +190,7 @@ public class CalendarActivity extends Activity
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             // each data item is just a string in this case
             public TextView letter, dayNum, title, earlyRelease, activityPeriod;
+            View snowIcon, starIcon;
             public DayRowListener listener;
             public ViewHolder(View rowView, DayRowListener listener)
             {
@@ -142,7 +200,9 @@ public class CalendarActivity extends Activity
                 this.title = (TextView)rowView.findViewById(R.id.row_title);
                 this.earlyRelease = (TextView) rowView.findViewById(R.id.row_early_release);
                 this.activityPeriod = (TextView) rowView.findViewById(R.id.row_activity_period);
+                this.snowIcon = rowView.findViewById(R.id.row_snow_icon);
                 this.listener = listener;
+                this.starIcon = rowView.findViewById(R.id.row_star_icon);
 
                 rowView.setOnClickListener(this);
             }
@@ -154,8 +214,8 @@ public class CalendarActivity extends Activity
             }
         }
 
-        private ArrayList<NRDay> sched;
-        public ScheduleAdapter(ArrayList<NRDay> sched)
+        private ArrayList<SchoolDay> sched;
+        public ScheduleAdapter(ArrayList<SchoolDay> sched)
         {
             this.sched = sched;
         }
@@ -165,8 +225,8 @@ public class CalendarActivity extends Activity
         {
             View row = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_calendar_day_row, parent, false);
 
-            NRDay day = sched.get(i);
-            ViewHolder holder = new ViewHolder(row, new DayRowListener(day));
+            SchoolDay day = sched.get(i);
+            ViewHolder holder = new ViewHolder(row, new DayRowListener(i));
             dayToHolder(holder, day);
             return holder;
         }
@@ -174,48 +234,110 @@ public class CalendarActivity extends Activity
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int i)
         {
-            NRDay day = sched.get(i);
+            SchoolDay day = sched.get(i);
 
             //update the day for this item's onclick listener
-            viewHolder.listener.listeningDay = day;
+            viewHolder.listener.listeningDayIndex = i;
 
             dayToHolder(viewHolder, day);
         }
 
-        private void dayToHolder(ViewHolder holder, NRDay day)
+        private void dayToHolder(ViewHolder holder, SchoolDay day)
         {
             //Title
-            String dayOfWeek = dayOfWeek(day.date);
+            String dayOfWeek = dayOfWeek(day.getDate());
             if(dayOfWeek.equals("Thursday"))
                 dayOfWeek = "Thurs";
             else if(dayOfWeek.equals("Tuesday"))
                 dayOfWeek = "Tues";
             else
                 dayOfWeek = dayOfWeek.substring(0, 3);
-            holder.title.setText(dayOfWeek + "- " + (day.date.get(Calendar.MONTH)+1) + "/" + day.date.get(Calendar.DATE));
+            holder.title.setText(dayOfWeek + "- " + (day.getDate().get(Calendar.MONTH)+1) + "/" + day.getDate().get(Calendar.DATE));
 
-            //Indicators
-            holder.letter.setText(day.classes.get(0).name());
-            holder.dayNum.setText(String.valueOf(day.day));
-            if(day.dayType.equals(NRSchedule.dayOptions[0]))
+            if(day instanceof NRDay || (((SpecialDay)day).getSpecialType() != DayType.SnowDay))
             {
-                holder.activityPeriod.setVisibility(View.GONE);
-                holder.earlyRelease.setVisibility(View.GONE);
-            }
-            else if(day.dayType.equals(NRSchedule.dayOptions[1]))
-            {
-                holder.activityPeriod.setVisibility(View.VISIBLE);
-                holder.earlyRelease.setVisibility(View.GONE);
-            }
-            else if(day.dayType.equals(NRSchedule.dayOptions[2]))
-            {
-                holder.activityPeriod.setVisibility(View.GONE);
-                holder.earlyRelease.setVisibility(View.VISIBLE);
+                if(day instanceof NRDay)
+                {
+                    String dayType = ((NRDay)day).dayType;
+                    String firstClass = ((NRDay)day).classes.get(0).name();
+                    //Indicators
+                    holder.letter.setText(firstClass);
+                    holder.dayNum.setText(String.valueOf((day.getRotationDay())));
+                    holder.snowIcon.setVisibility(View.GONE);
+
+                    holder.letter.setVisibility(View.VISIBLE);
+                    holder.dayNum.setVisibility(View.VISIBLE);
+
+                    if(dayType.equals(NRSchedule.DAY_OPTION_NORMAL))
+                    {
+                        holder.activityPeriod.setVisibility(View.GONE);
+                        holder.earlyRelease.setVisibility(View.GONE);
+                    }
+                    else if(dayType.equals(NRSchedule.DAY_OPTION_AP))
+                    {
+                        holder.activityPeriod.setVisibility(View.VISIBLE);
+                        holder.earlyRelease.setVisibility(View.GONE);
+                    }
+                    else if(dayType.equals(NRSchedule.DAY_OPTION_ER))
+                    {
+                        holder.activityPeriod.setVisibility(View.GONE);
+                        holder.earlyRelease.setVisibility(View.VISIBLE);
+                    }
+                    else
+                    {
+                        holder.activityPeriod.setVisibility(View.VISIBLE);
+                        holder.earlyRelease.setVisibility(View.VISIBLE);
+                    }
+                }
+                else
+                {
+                    if(((SpecialDay) day).getSpecialClassesSize() > 0)
+                        holder.letter.setText(((SpecialDay)day).getSpecialClass(0).classType.name());
+                    holder.dayNum.setText(String.valueOf(((SpecialDay)day).rotationDay));
+                    holder.letter.setVisibility(View.VISIBLE);
+                    holder.dayNum.setVisibility(View.VISIBLE);
+
+                    holder.activityPeriod.setVisibility(View.GONE);
+                    holder.earlyRelease.setVisibility(View.GONE);
+                    if(((SpecialDay)day).getSpecialType() == DayType.TwoHrDelay)
+                        holder.snowIcon.setVisibility(View.VISIBLE);
+                    else
+                    {
+                        holder.snowIcon.setVisibility(View.GONE);
+                    }
+                }
+
+                boolean showStar = false;
+                //Check to see if long block study star should be shown
+                if(SchedPrefs.getHighlightLongblockStudy(CalendarActivity.this))
+                {
+                    if(day.hasLongBlock())
+                    {
+                        ClassType temp =  day.getLongBlockClass();
+                        if(temp != ClassType.AP)
+                        {
+                            DatabaseNRClass databaseNRClass = mySchedule.get(temp, day.getRotationDay());
+                            if(databaseNRClass.getClassName().toLowerCase().equals("study"))
+                            {
+                                showStar = true;
+
+                            }
+                        }
+                    }
+                }
+
+                if(showStar)
+                    holder.starIcon.setVisibility(View.VISIBLE);
+                else
+                    holder.starIcon.setVisibility(View.GONE);
             }
             else
             {
-                holder.activityPeriod.setVisibility(View.VISIBLE);
-                holder.earlyRelease.setVisibility(View.VISIBLE);
+                holder.letter.setVisibility(View.GONE);
+                holder.dayNum.setVisibility(View.GONE);
+                holder.activityPeriod.setVisibility(View.GONE);
+                holder.earlyRelease.setVisibility(View.GONE);
+                holder.snowIcon.setVisibility(View.VISIBLE);
             }
         }
 
@@ -251,16 +373,16 @@ public class CalendarActivity extends Activity
 
     public class DayRowListener
     {
-        public NRDay listeningDay;
+        public int listeningDayIndex;
 
-        public DayRowListener(NRDay day)
+        public DayRowListener(int dayIndex)
         {
-            listeningDay = day;
+            listeningDayIndex = dayIndex;
         }
 
         public void onClick(View v)
         {
-            rowClicked(listeningDay, v);
+            rowClicked(listeningDayIndex);
         }
     }
 }

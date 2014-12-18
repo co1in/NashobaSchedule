@@ -1,0 +1,136 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ctrmksw.nashobaschedule.SettingsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal"
+                android:id="@+id/settings_edit_schedule_layout"
+                android:background="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Schedule"
+                android:textSize="18sp"
+                android:textColor="#000"
+                android:fontFamily="sans-serif"
+                android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/thin_outline"/>
+            
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:id="@+id/settings_lbstudy_layout"
+                android:background="?android:attr/selectableItemBackground">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Highlight Long Block Study"
+                        android:textSize="18sp"
+                        android:textColor="#000"
+                        android:fontFamily="sans-serif"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Put an indicator next to days with long block study"
+                        android:layout_marginRight="55dp"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/settings_lbstudy_checkbox"/>
+            </FrameLayout>
+            
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/thin_outline"/>
+            
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:id="@+id/settings_version_layout"
+                android:background="?android:attr/selectableItemBackground">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nashoba Schedule Version"
+                        android:textSize="18sp"
+                        android:textColor="#000"
+                        android:fontFamily="sans-serif"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" 
+                        android:text="Version"
+                        android:textSize="16sp"
+                        android:id="@+id/settings_version_text"/>
+                    </LinearLayout>
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/thin_outline"
+                android:id="@+id/developer_login_divider"
+                android:visibility="gone"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:id="@+id/settings_developer_login_layout"
+                android:background="?android:attr/selectableItemBackground"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Developer Login"
+                    android:textSize="18sp"
+                    android:textColor="#000"
+                    android:fontFamily="sans-serif"
+                    android:layout_gravity="center_vertical"/>
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

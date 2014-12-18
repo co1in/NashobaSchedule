@@ -30,8 +30,8 @@ public class ConfigureScheduleActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        getActionBar().setDisplayHomeAsUpEnabled(SchedPrefs.getHasSavedSchedule(this));
+        if(getActionBar() != null)
+            getActionBar().setDisplayHomeAsUpEnabled(SchedPrefs.getHasSavedSchedule(this));
 
         setContentView(R.layout.activity_configure_schedule);
 
