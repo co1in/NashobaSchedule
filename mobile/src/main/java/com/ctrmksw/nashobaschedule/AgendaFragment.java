@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ctrmksw.nashobaschedule.ScheduleUtils.SchoolDay;
 import com.ctrmksw.nashobaschedule.ScheduleUtils.SchoolDayManager;
@@ -27,6 +28,7 @@ import com.ctrmksw.nashobaschedule.ScheduleUtils.nr.NRDay;
 import com.ctrmksw.nashobaschedule.ScheduleUtils.nr.NRSchedule;
 import com.ctrmksw.nashobaschedule.database.DatabaseNRClass;
 import com.ctrmksw.nashobaschedule.database.MySchedule;
+import com.ctrmksw.nashobaschedule.powerschool.PowerschoolActivity;
 
 import org.w3c.dom.Text;
 
@@ -78,6 +80,7 @@ public class AgendaFragment extends Fragment
             CardView specialLunchCard = checkSpecialLunch();
             CardView todayNotesCard = checkTodayNotes();
             setupPdfCard();
+            setupPowerschoolCard();
 
             if(specialLunchCard != null)
                 root.addView(specialLunchCard, 0);
@@ -89,8 +92,22 @@ public class AgendaFragment extends Fragment
         }
         catch (Exception e)
         {
+            Toast.makeText(getActivity(), "Internal Error", Toast.LENGTH_SHORT).show();
             Log.e("Population Error", "Population Error", e);
         }
+    }
+
+    private void setupPowerschoolCard()
+    {
+        root.findViewById(R.id.view_powerschool_card).setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent i = new Intent(getActivity(), PowerschoolActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private CardView checkTodayNotes()

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import com.ctrmksw.nashobaschedule.ScheduleUtils.ClassType;
@@ -33,11 +34,6 @@ import java.util.Calendar;
 
 public class CalendarActivity extends Activity
 {
-
-    private MySchedule mySchedule;
-
-    private ScheduleDbHelper database;
-
     private RecyclerView recyclerView;
     private LinearLayoutManager manager;
     private ScheduleAdapter adapter;
@@ -49,6 +45,14 @@ public class CalendarActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+
+        if(!SchoolDayManager.isLoaded())
+        {
+            Intent i = new Intent(this, AgendaActivity.class);
+            startActivity(i);
+            finish();
+            return;
+        }
 
         setContentView(R.layout.activity_calendar);
 
@@ -63,92 +67,40 @@ public class CalendarActivity extends Activity
         adapter = new ScheduleAdapter(SchoolDayManager.getCurrentList());
         recyclerView.setAdapter(adapter);
 
-        database = new ScheduleDbHelper(this);
-    }
-
-
-    @Override
-    protected void onStart()
-    {
-        super.onStart();
-
-        database.getClassInfo(new ScheduleDbHelper.QueryRunnable()
+        if(!SchedPrefs.getHasViewedCalendarHint(CalendarActivity.this))
         {
-            @Override
-            public void run(MySchedule map)
+            new Thread(new Runnable()
             {
-
-                CalendarActivity.this.mySchedule = map;
-
-                runOnUiThread(new Runnable()
+                @Override
+                public void run()
                 {
-                    @Override
-                    public void run()
-                    {
-                        adapter = new ScheduleAdapter(SchoolDayManager.getCurrentList());
-                        recyclerView.setAdapter(adapter);
-
-                        AlphaAnimation anim = new AlphaAnimation(0.0f, 1.0f);
-                        anim.setDuration(300);
-                        anim.setAnimationListener(new Animation.AnimationListener()
-                        {
-                            @Override
-                            public void onAnimationStart(Animation animation)
-                            {
-                                recyclerView.setVisibility(View.VISIBLE);
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation)
-                            {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation)
-                            {
-
-                            }
-                        });
-                        recyclerView.startAnimation(anim);
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                });
-
-                if(!SchedPrefs.getHasViewedCalendarHint(CalendarActivity.this))
-                {
-                    new Thread(new Runnable()
+                    runOnUiThread(new Runnable()
                     {
                         @Override
                         public void run()
                         {
-                            try {
-                                Thread.sleep(500);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            runOnUiThread(new Runnable()
-                            {
+                            View tipRoot = findViewById(R.id.calendar_tip_root);
+                            tipRoot.setVisibility(View.VISIBLE);
+                            findViewById(R.id.calendar_tip_root).setOnClickListener(new View.OnClickListener() {
                                 @Override
-                                public void run()
+                                public void onClick(View v)
                                 {
-                                    View tipRoot = findViewById(R.id.calendar_tip_root);
-                                    tipRoot.setVisibility(View.VISIBLE);
-                                    findViewById(R.id.calendar_tip_root).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v)
-                                        {
-                                            findViewById(R.id.calendar_tip_root).setVisibility(View.GONE);
-                                            SchedPrefs.didViewCalendarHint(CalendarActivity.this);
-                                        }
-                                    });
+                                    findViewById(R.id.calendar_tip_root).setVisibility(View.GONE);
+                                    SchedPrefs.didViewCalendarHint(CalendarActivity.this);
                                 }
                             });
                         }
-                    }).start();
+                    });
                 }
-            }
-        });
+            }).start();
+        }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -316,11 +268,16 @@ public class CalendarActivity extends Activity
                         ClassType temp =  day.getLongBlockClass();
                         if(temp != ClassType.AP)
                         {
-                            DatabaseNRClass databaseNRClass = mySchedule.get(temp, day.getRotationDay());
-                            if(databaseNRClass.getClassName().toLowerCase().equals("study"))
+                            if(AgendaActivity.getMySchedule() == null)
+                                finish();
+                            else
                             {
-                                showStar = true;
+                                DatabaseNRClass databaseNRClass = AgendaActivity.getMySchedule().get(temp, day.getRotationDay());
+                                if(databaseNRClass.getClassName().toLowerCase().equals("study"))
+                                {
+                                    showStar = true;
 
+                                }
                             }
                         }
                     }

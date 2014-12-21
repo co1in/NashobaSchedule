@@ -7,6 +7,9 @@
 
     <color name="thin_outline">#999</color>
 
+    <color name="powerschoolPrimary">#364395</color>
+    <color name="powerschoolPrimaryDark">#273069</color>
+
     <!--Rounded Rectangle Colors-->
     <color name="rounded_rect_green">#81C784</color>
     <color name="rounded_rect_green_outline">#4CAF50</color>

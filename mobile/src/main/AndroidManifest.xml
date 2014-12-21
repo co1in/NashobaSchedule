@@ -3,7 +3,7 @@
     package="com.ctrmksw.nashobaschedule" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -36,6 +36,12 @@
         <activity
             android:name=".DeveloperDashboardActivity"
             android:label="Developer Login" >
+        </activity>
+        <activity
+            android:name=".powerschool.PowerschoolActivity"
+            android:label="Powerschool"
+            android:icon="@drawable/powerschool"
+            android:theme="@style/PowerschoolTheme">
         </activity>
     </application>
 

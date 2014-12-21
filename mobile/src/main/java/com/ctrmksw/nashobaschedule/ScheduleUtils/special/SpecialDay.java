@@ -166,14 +166,14 @@ public class SpecialDay extends SchoolDay
         }
         else if(comparison == 0)
         {
-            if(dayType == DayType.SnowDay || dayType == DayType.TwoHrDelay)
+            if(dayType == DayType.SnowDay)
                 return false;
             else
             {
                 if(classList.size() > 0)
                 {
                     Time endTime = classList.get(classList.size()-1).classTime.getFinish();
-                    return (endTime.getHours() > now.get(Calendar.HOUR_OF_DAY) || (endTime.getHours() == now.get(Calendar.HOUR_OF_DAY) && endTime.getMinutes() > now.get(Calendar.MINUTE)));
+                    return (endTime.getHours() < now.get(Calendar.HOUR_OF_DAY) || (endTime.getHours() == now.get(Calendar.HOUR_OF_DAY) && endTime.getMinutes() < now.get(Calendar.MINUTE)));
                 }
                 else
                 {

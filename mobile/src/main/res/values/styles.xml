@@ -1,8 +1,8 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar"/>
+    <style name="PowerschoolTheme" parent="android:Theme.Holo.Light.DarkActionBar"/>
 
-    </style>
-
+    <style name="ProgressBar" parent="@android:style/Widget.Holo.ProgressBar.Large"/>
 </resources>

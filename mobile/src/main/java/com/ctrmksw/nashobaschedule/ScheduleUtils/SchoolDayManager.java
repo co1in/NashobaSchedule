@@ -15,6 +15,11 @@ public class SchoolDayManager
     private static ArrayList<SpecialDay> specialDays = null;
     private static ArrayList<SchoolDay> schoolDays;
 
+    public static boolean isLoaded()
+    {
+        return schoolDays != null;
+    }
+
     public static void loadedNRDays(ArrayList<NRDay> nrDays)
     {
         SchoolDayManager.nrDays = nrDays;
@@ -36,18 +41,21 @@ public class SchoolDayManager
         {
             for(int i = 0; i < specialDays.size(); i++)
             {
-                boolean replaced = false;
-                for(int p = 0; p < schoolDays.size(); p++)
+                if(specialDays.get(i) != null)
                 {
-                    if(schoolDays.get(p).compareTo(specialDays.get(i)) == 0)
+                    boolean replaced = false;
+                    for(int p = 0; p < schoolDays.size(); p++)
                     {
-                        specialDays.get(i).thisIsReplacing((NRDay) schoolDays.get(p));
-                        schoolDays.set(p, specialDays.get(i));
-                        replaced = true;
+                        if(schoolDays.get(p).compareTo(specialDays.get(i)) == 0)
+                        {
+                            specialDays.get(i).thisIsReplacing((NRDay) schoolDays.get(p));
+                            schoolDays.set(p, specialDays.get(i));
+                            replaced = true;
+                        }
                     }
+                    if(!replaced)
+                        schoolDays.add(specialDays.get(i));
                 }
-                if(!replaced)
-                    schoolDays.add(specialDays.get(i));
             }
         }
 

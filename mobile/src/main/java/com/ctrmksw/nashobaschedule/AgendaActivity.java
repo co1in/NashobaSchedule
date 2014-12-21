@@ -175,8 +175,12 @@ public class AgendaActivity extends FragmentActivity
             String line;
             while((line = in.readLine()) != null)
             {
+                if(line.trim().equals(""))
+                    continue;
                 localSpecialsCopy.add(line);
-                specialDays.add(SpecialDay.fromString(line));
+                SpecialDay temp = SpecialDay.fromString(line);
+                if(temp != null)
+                    specialDays.add(temp);
             }
 
             SpecialDayManager.loadSpecialDays(specialDays);

@@ -1,31 +1,31 @@
 package com.ctrmksw.nashobaschedule;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.ctrmksw.nashobaschedule.ScheduleUtils.special.DayType;
 import com.ctrmksw.nashobaschedule.network.DeveloperActionRequest;
-import com.doomonafireball.betterpickers.calendardatepicker.CalendarDatePickerDialog;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
-import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class DeveloperDashboardActivity extends FragmentActivity
-        implements CalendarDatePickerDialog.OnDateSetListener, RadialTimePickerDialog.OnTimeSetListener
+public class DeveloperDashboardActivity extends Activity
 {
 
     private final String FRAG_TAG_TIME_PICKER = "fragmentTimePicker";
@@ -63,12 +63,8 @@ public class DeveloperDashboardActivity extends FragmentActivity
             @Override
             public void onClick(View v)
             {
-                FragmentManager fm = getSupportFragmentManager();
-                Calendar now = Calendar.getInstance();
-                CalendarDatePickerDialog calendarDatePickerDialog = CalendarDatePickerDialog
-                        .newInstance(DeveloperDashboardActivity.this, now.get(Calendar.YEAR), now.get(Calendar.MONTH),
-                                now.get(Calendar.DAY_OF_MONTH));
-                calendarDatePickerDialog.show(fm, FRAM_CALENDAR_PICKER);
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getFragmentManager(), "datePicker");
             }
         });
 
@@ -112,11 +108,8 @@ public class DeveloperDashboardActivity extends FragmentActivity
                         currentTimeIndex = index;
                         currentTimeIsStart = isStartTime;
 
-                        Calendar now = Calendar.getInstance();
-                        RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
-                                .newInstance(DeveloperDashboardActivity.this, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE),
-                                        DateFormat.is24HourFormat(DeveloperDashboardActivity.this));
-                        timePickerDialog.show(getSupportFragmentManager(), FRAG_TAG_TIME_PICKER);
+                        DialogFragment newFragment = new TimePickerFragment();
+                        newFragment.show(getFragmentManager(), "timePicker");
                     }
                 }));
                 classesLayout.addView(classViews.get(classViews.size()-1).getView());
@@ -150,23 +143,6 @@ public class DeveloperDashboardActivity extends FragmentActivity
 
     private int currentTimeIndex;
     private boolean currentTimeIsStart;
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        RadialTimePickerDialog rtpd = (RadialTimePickerDialog) getSupportFragmentManager().findFragmentByTag(FRAG_TAG_TIME_PICKER);
-        if (rtpd != null) {
-            rtpd.setOnTimeSetListener(this);
-        }
-
-        CalendarDatePickerDialog calendarDatePickerDialog = (CalendarDatePickerDialog) getSupportFragmentManager()
-                .findFragmentByTag(FRAG_TAG_TIME_PICKER);
-        if (calendarDatePickerDialog != null) {
-            calendarDatePickerDialog.setOnDateSetListener(this);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -245,7 +221,7 @@ public class DeveloperDashboardActivity extends FragmentActivity
                     extras = extras.trim();
                 }
 
-                new DeveloperActionRequest(this).execute(new String[]{action, extras, PASSCODE});
+                new DeveloperActionRequest(this).execute(action, extras, PASSCODE);
             }
         }
 
@@ -258,22 +234,62 @@ public class DeveloperDashboardActivity extends FragmentActivity
     }
 
     private int year = -1, month = -1, day = -1;
-    @Override
-    public void onDateSet(CalendarDatePickerDialog calendarDatePickerDialog, int year, int month, int day)
+
+    public void onDateSet(int year, int month, int day)
     {
         this.year = year;
         this.month = month;
         this.day = day;
 
-        dateLabel.setText("Date: " + month + "/" + day + "/" + year);
+        dateLabel.setText("Date: " + (month+1) + "/" + day + "/" + year);
     }
 
-    @Override
-    public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i2)
+    public void onTimeSet(int i, int i2)
     {
         if(currentTimeIsStart)
             classViews.get(currentTimeIndex).setStartTime(i, i2);
         else
             classViews.get(currentTimeIndex).setEndTime(i, i2);
+    }
+
+    public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day)
+        {
+            ((DeveloperDashboardActivity)getActivity()).onDateSet(year, month, day);
+        }
+    }
+
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+        {
+            ((DeveloperDashboardActivity)getActivity()).onTimeSet(hourOfDay, minute);
+        }
     }
 }
